@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "py-parkour"
+version = "1.0.0"
+description = "A Full-Stack Scraper framework combining cookie consent, auto-pagination, and temp identities."
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+authors = [
+  {name = "zinzied", email = "zinzied@gmail.com"}
+]
+dependencies = [
+    "aiohttp",
+    "beautifulsoup4"
+]
+
+[project.optional-dependencies]
+full = [
+    "playwright"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/yourusername/py-parkour"
+"Bug Tracker" = "https://github.com/yourusername/py-parkour/issues"
