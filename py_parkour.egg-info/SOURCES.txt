@@ -1,3 +1,4 @@
+README.md
 pyproject.toml
 py_parkour/__init__.py
 py_parkour.egg-info/PKG-INFO
@@ -10,3 +11,5 @@ py_parkour/core/session.py
 py_parkour/gadgets/compass.py
 py_parkour/gadgets/crusher.py
 py_parkour/gadgets/disguises.py
+py_parkour/gadgets/radar.py
+py_parkour/gadgets/shadow.py

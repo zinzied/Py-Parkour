@@ -1,5 +1,5 @@
-aiohttp
-beautifulsoup4
+aiohttp>=3.8.0
+beautifulsoup4>=4.11.0
 
 [full]
-playwright
+playwright>=1.30.0

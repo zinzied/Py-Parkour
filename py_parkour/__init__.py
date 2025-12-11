@@ -2,6 +2,8 @@ from .core.driver import ParkourDriver
 from .gadgets.crusher import Crusher
 from .gadgets.compass import Compass
 from .gadgets.disguises import Disguises
+from .gadgets.shadow import Shadow
+from .gadgets.radar import Radar
 from typing import AsyncGenerator, Any
 
 class ParkourBot:
@@ -15,6 +17,8 @@ class ParkourBot:
         # These are initialized after browser start
         self.crusher = None
         self.compass = None
+        self.shadow = None
+        self.radar = None
 
     async def start(self):
         """Starts the browser session."""
@@ -22,6 +26,9 @@ class ParkourBot:
         # Helpers that depend on the page
         self.crusher = Crusher(self.driver.page)
         self.compass = Compass(self.driver.page)
+        self.shadow = Shadow(self.driver.page)
+        self.radar = Radar(self.driver.page)
+        self.radar.start() # active by default? Let's keep it manual or auto? Let's start it.
 
     async def close(self):
         """Closes the browser session."""
