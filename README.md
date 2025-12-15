@@ -141,4 +141,8 @@ Py-Parkour is best for:
 
 ---
 
+
+For more detailed examples on using **Compass** and **Radar**, check out the [Gadgets Guide](GUIDE.md).
+
 *Built with ❤️ for Scrapers who hate boilerplate.*
+
