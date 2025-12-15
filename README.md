@@ -9,7 +9,7 @@
         |___/                                      
 ```
 
-> **Version**: 2.1.0  
+> **Version**: 2.2.0  
 > **Author**: zinzied (zinzied@gmail.com)
 
 [![PyPI version](https://badge.fury.io/py/py-parkour.svg)](https://badge.fury.io/py/py-parkour)
