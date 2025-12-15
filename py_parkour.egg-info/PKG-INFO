@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: py-parkour
-Version: 2.0.0
+Version: 2.1.0
 Summary: A Hybrid Scraper Framework: cookie consent, auto-pagination, temp identities, session bridging, and API discovery.
 Author-email: zinzied <zinzied@gmail.com>
 License: MIT
@@ -36,7 +36,7 @@ Requires-Dist: playwright>=1.30.0; extra == "full"
         |___/                                      
 ```
 
-> **Version**: 2.0.0  
+> **Version**: 2.1.0  
 > **Author**: zinzied (zinzied@gmail.com)
 
 [![PyPI version](https://badge.fury.io/py/py-parkour.svg)](https://badge.fury.io/py/py-parkour)
@@ -151,7 +151,29 @@ for req in bot.radar.requests:
         print(f"Found User API: {req['url']}")
 ```
 
+### 8. 🖱️ Gadget: GhostCursor (Human Movement)
+Stop teleporting the mouse. Move it like a human with Bezier curves.
+
+```python
+await bot.ghost.click("#submit-btn")
+```
+
+### 9. 📐 Gadget: SpatialCompass (Geometric Finding)
+Find elements relative to others ("Right of label", "Below header").
+
+```python
+await bot.spatial.find_right_of("label:text('Email')")
+```
+
+### 10. ⌨️ Gadget: ChaosTyper (Human Typing)
+Type with realistic speed variations and occasional typos + corrections.
+
+```python
+await bot.typer.type_human("#input", "Hello World")
+```
+
 ---
+
 
 ## 🎯 Where to use it?
 
@@ -164,8 +186,12 @@ Py-Parkour is best for:
 
 ## 🏗 Architecture
 - **Core**: Async Playwright wrapper.
-- **Gadgets**: Modular tools attached to the bot (`.crusher`, `.compass`, `.identity`, `.shadow`, `.radar`).
+- **Gadgets**: Modular tools attached to the bot (`.crusher`, `.compass`, `.identity`, `.shadow`, `.radar`, `.ghost`, `.spatial`, `.typer`).
 
 ---
 
+
+For more detailed examples on using **Compass** and **Radar**, check out the [Gadgets Guide](GUIDE.md).
+
 *Built with ❤️ for Scrapers who hate boilerplate.*
+
