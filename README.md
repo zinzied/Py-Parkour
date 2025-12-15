@@ -145,6 +145,19 @@ Type with realistic speed variations and occasional typos + corrections.
 await bot.typer.type_human("#input", "Hello World")
 ```
 
+### 11. ⚖️ Gadget: Solicitor (Captcha Solving)
+Connect to external solvers (like 2Captcha) to bypass ReCaptcha, hCaptcha, and Turnstile.
+
+```python
+# Configure
+bot.solicitor.set_solver(TwoCaptchaSolver(api_key="KEY"))
+
+# Solve
+await bot.solicitor.solve_recaptcha_v2() # Auto-injects
+await bot.solicitor.solve_turnstile()    # Auto-injects
+token = await bot.solicitor.solve_recaptcha_v3("KEY", action="login")
+```
+
 ---
 
 
