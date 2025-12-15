@@ -7,6 +7,7 @@ from .gadgets.radar import Radar
 from .gadgets.ghost_cursor import GhostCursor
 from .gadgets.spatial import SpatialCompass
 from .gadgets.chaos_typer import ChaosTyper
+from .gadgets.solicitor import Solicitor, TwoCaptchaSolver
 from typing import AsyncGenerator, Any
 
 class ParkourBot:
@@ -25,6 +26,7 @@ class ParkourBot:
         self.ghost = None
         self.spatial = None
         self.typer = None
+        self.solicitor = None
 
     async def start(self):
         """Starts the browser session."""
@@ -37,6 +39,7 @@ class ParkourBot:
         self.ghost = GhostCursor(self.driver.page)
         self.spatial = SpatialCompass(self.driver.page)
         self.typer = ChaosTyper(self.driver.page)
+        self.solicitor = Solicitor(self.driver.page)
         
         self.radar.start() # active by default? Let's keep it manual or auto? Let's start it.
 

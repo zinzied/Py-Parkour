@@ -159,7 +159,7 @@ Py-Parkour is best for:
 
 ## 🏗 Architecture
 - **Core**: Async Playwright wrapper.
-- **Gadgets**: Modular tools attached to the bot (`.crusher`, `.compass`, `.identity`, `.shadow`, `.radar`, `.ghost`, `.spatial`, `.typer`).
+- **Gadgets**: Modular tools attached to the bot (`.crusher`, `.compass`, `.identity`, `.shadow`, `.radar`, `.ghost`, `.spatial`, `.typer`, `.solicitor`).
 
 ---
 

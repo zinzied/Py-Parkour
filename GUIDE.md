@@ -157,6 +157,41 @@ await bot.typer.type_human("#search-bar", "Hello World", mistake_chance=0.1)
 
 ---
 
+## 6. ⚖️ Solicitor (.solicitor)
+**The Anti-Bot Solver Interface**
+
+### What is it?
+When you can't evade detection and hit a Captcha, the Solicitor handles the negotiation with external solving services (like 2Captcha) to break the lock.
+
+### Usage
+It requires a `Solver` implementation. We provide `TwoCaptchaSolver` out of the box (requires no extra libraries).
+
+```python
+from py_parkour import ParkourBot, TwoCaptchaSolver
+
+bot = ParkourBot()
+await bot.start()
+
+# 1. Configure
+bot.solicitor.set_solver(TwoCaptchaSolver(api_key="YOUR_2CAPTCHA_KEY"))
+
+# 2. Solve (Auto-detects sitekey on the page)
+# ReCaptcha V2
+await bot.solicitor.solve_recaptcha_v2()
+
+# ReCaptcha V3 (Invisible)
+token = await bot.solicitor.solve_recaptcha_v3(site_key="KEY", action="login", min_score=0.9)
+
+# hCaptcha
+await bot.solicitor.solve_hcaptcha()
+
+# Cloudflare Turnstile
+await bot.solicitor.solve_turnstile()
+```
+
+---
+
+
 Both `Radar` and `Compass` are **Gadgets** attached to the `ParkourBot`.
 
 *   **Initialization**: They are initialized in `bot.start()` and attached to `bot.radar` and `bot.compass`.
