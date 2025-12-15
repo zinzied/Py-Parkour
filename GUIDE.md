@@ -98,9 +98,65 @@ You can also access the compass directly if you need more granular control, thou
 await bot.compass.crawl(max_pages=3) 
 ```
 
+
 ---
 
-## 🔗 How they relate to the Library
+## 3. 🖱️ GhostCursor (.ghost)
+**The Anti-Bot Movement Engine**
+
+### What is it?
+Standard automation moves the mouse instantly (teleportation), which is a huge red flag for anti-bot systems. GhostCursor simulates human hand movement using **Cubic Bezier curves**, adding natural acceleration, overshoot, and jitter.
+
+### Usage
+```python
+# Move naturally to an element
+await bot.ghost.move_to("#submit-button")
+
+# Click naturally (moves first, then clicks)
+await bot.ghost.click("#submit-button")
+```
+
+---
+
+## 4. 📐 SpatialCompass (.spatial)
+**The Geometric Selector**
+
+### What is it?
+When websites use dynamic IDs (e.g., `input id="x9f-23"`) or messy classes, standard selectors break. SpatialCompass finds elements based on their **visual position** relative to stable labels.
+
+### Usage
+It strictly uses the bounding box geometry of elements to calculate relationships.
+
+```python
+# "Find the input field to the RIGHT of the 'Username' label"
+user_input = await bot.spatial.find_right_of("label:text('Username')", target_tag="input")
+
+# "Find the checkbox BELOW the 'Terms' header"
+checkbox = await bot.spatial.find_below("h3:text('Terms')", target_tag="input")
+
+if user_input:
+    await user_input.fill("Gotcha!")
+```
+
+---
+
+## 5. ⌨️ ChaosTyper (.typer)
+**The Human Typing Simulator**
+
+### What is it?
+`page.fill()` is instant. `page.type(delay=100)` is robotic. ChaosTyper simulates:
+1.  **Variable Latency**: Random delays based on a normal distribution (bell curve).
+2.  **Mistakes**: Occasional "fat-finger" errors based on QWERTY adjacency.
+3.  **Corrections**: It realizes the mistake, Backspaces, and re-types correctly.
+
+### Usage
+```python
+# Type with a 10% chance of making a typo per character
+await bot.typer.type_human("#search-bar", "Hello World", mistake_chance=0.1)
+```
+
+---
+
 Both `Radar` and `Compass` are **Gadgets** attached to the `ParkourBot`.
 
 *   **Initialization**: They are initialized in `bot.start()` and attached to `bot.radar` and `bot.compass`.

@@ -124,7 +124,29 @@ for req in bot.radar.requests:
         print(f"Found User API: {req['url']}")
 ```
 
+### 8. 🖱️ Gadget: GhostCursor (Human Movement)
+Stop teleporting the mouse. Move it like a human with Bezier curves.
+
+```python
+await bot.ghost.click("#submit-btn")
+```
+
+### 9. 📐 Gadget: SpatialCompass (Geometric Finding)
+Find elements relative to others ("Right of label", "Below header").
+
+```python
+await bot.spatial.find_right_of("label:text('Email')")
+```
+
+### 10. ⌨️ Gadget: ChaosTyper (Human Typing)
+Type with realistic speed variations and occasional typos + corrections.
+
+```python
+await bot.typer.type_human("#input", "Hello World")
+```
+
 ---
+
 
 ## 🎯 Where to use it?
 
@@ -137,7 +159,7 @@ Py-Parkour is best for:
 
 ## 🏗 Architecture
 - **Core**: Async Playwright wrapper.
-- **Gadgets**: Modular tools attached to the bot (`.crusher`, `.compass`, `.identity`, `.shadow`, `.radar`).
+- **Gadgets**: Modular tools attached to the bot (`.crusher`, `.compass`, `.identity`, `.shadow`, `.radar`, `.ghost`, `.spatial`, `.typer`).
 
 ---
 
