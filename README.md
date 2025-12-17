@@ -9,10 +9,13 @@
         |___/                                      
 ```
 
-> **Version**: 2.2.0  
-> **Author**: zinzied (zinzied@gmail.com)
+> **Version**: 2.2.1  
+> **Author**: Zinzied (ziedboughdir@gmail.com) · [GitHub](https://github.com/zinzied)
 
 [![PyPI version](https://badge.fury.io/py/py-parkour.svg)](https://badge.fury.io/py/py-parkour)
+<a href="https://www.linkedin.com/in/zied-boughdir">
+  <img src="https://img.shields.io/badge/LinkedIn-Connect-0077B5?style=for-the-badge&logo=linkedin"/>
+</a>
 
 # 🏃 Py-Parkour: The Hybrid Scraper Framework
 

@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "py-parkour"
-version = "2.2.0"
+version = "2.2.1"
 description = "A Hybrid Scraper Framework: cookie consent, auto-pagination, temp identities, session bridging, and API discovery."
 readme = "README.md"
 requires-python = ">=3.8"
 license = {text = "MIT"}
 authors = [
-  {name = "zinzied", email = "zinzied@gmail.com"}
+  {name = "Zinzied", email = "ziedboughdir@gmail.com"}
 ]
 keywords = ["scraping", "automation", "playwright", "web-scraping", "bot", "cookies", "pagination", "api-discovery"]
 classifiers = [
@@ -38,4 +38,6 @@ full = [
 
 [project.urls]
 "Homepage" = "https://github.com/zinzied/Py-Parkour"
+"Repository" = "https://github.com/zinzied/Py-Parkour"
 "Bug Tracker" = "https://github.com/zinzied/Py-Parkour/issues"
+"Author" = "https://github.com/zinzied"
