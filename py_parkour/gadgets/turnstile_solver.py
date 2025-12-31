@@ -35,6 +35,11 @@ class TurnstileSolver:
         "[data-turnstile]",
         "div[id^='cf-turnstile']",
         "iframe[src*='challenges.cloudflare.com/turnstile']",
+        # Managed challenge selectors
+        "#challenge-stage",
+        "#challenge-running",
+        ".challenge-form",
+        "#cf-please-wait",
     ]
     
     TURNSTILE_IFRAME_PATTERNS = [
@@ -65,6 +70,19 @@ class TurnstileSolver:
         Returns:
             Selector or 'iframe' string if found, None otherwise
         """
+        # 0. Check for Managed Challenge Page (Cloudflare)
+        try:
+            title = await self.page.title()
+            if "Just a moment" in title or "Cloudflare" in title:
+                # Check if we have a specific challenge container
+                for selector in self.TURNSTILE_CONTAINER_SELECTORS:
+                    if await self.page.locator(selector).count() > 0:
+                        return selector
+                # If not found yet but title matches, it might be loading
+                return "managed-challenge-loading"
+        except Exception:
+            pass
+
         # 1. Check main page selectors
         for selector in self.TURNSTILE_CONTAINER_SELECTORS:
             try:
@@ -154,13 +172,14 @@ class TurnstileSolver:
             return center_x, center_y
         return None, None
     
-    async def solve(self, timeout: int = 30, simulate_human: bool = True) -> bool:
+    async def solve(self, timeout: int = 30, simulate_human: bool = True, manual_fallback: bool = True) -> bool:
         """
         Attempt to solve Turnstile using micro-interactions.
         
         Args:
             timeout: Maximum seconds to wait for solution
             simulate_human: Whether to simulate human presence before solving
+            manual_fallback: Wait for manual solving if automation fails
             
         Returns:
             True if solved successfully, False otherwise
@@ -169,7 +188,18 @@ class TurnstileSolver:
         
         # 1. Find Turnstile
         container_selector = await self.detect_turnstile()
-        if not container_selector:
+        
+        # Handle managed challenge loading state
+        if container_selector == "managed-challenge-loading":
+            print("TurnstileSolver: Detected Cloudflare Managed Challenge. Waiting for widget...")
+            try:
+                # Wait for the actual widget to appear
+                await self.page.wait_for_selector(".cf-turnstile, iframe[src*='turnstile']", timeout=10000)
+                container_selector = await self.detect_turnstile() # Re-detect
+            except Exception:
+                print("TurnstileSolver: Timed out waiting for managed challenge widget.")
+        
+        if not container_selector or container_selector == "managed-challenge-loading":
             print("TurnstileSolver: No Turnstile detected on page")
             return False
         
@@ -232,7 +262,26 @@ class TurnstileSolver:
         await asyncio.sleep(random.uniform(*self.post_click_delay))
         
         # 10. Wait for verification
-        return await self._wait_for_success(timeout)
+        success = await self._wait_for_success(timeout)
+        if success:
+            return True
+            
+        # 11. Manual Fallback
+        if manual_fallback:
+            print("TurnstileSolver: ⚠️ Auto-solve failed or timed out.")
+            print("TurnstileSolver: Switching to MANUAL mode. Please solve the captcha manually...")
+            
+            # Wait for a longer period (e.g., 5 minutes) for user intervention
+            manual_timeout = 300
+            manual_success = await self._wait_for_success(manual_timeout)
+            
+            if manual_success:
+                print("TurnstileSolver: ✅ Manual solution detected!")
+                return True
+            else:
+                print("TurnstileSolver: ❌ Manual solve timed out.")
+                
+        return False
     
     async def _solve_embedded(self, container_selector: str, timeout: int) -> bool:
         """Solve embedded (non-iframe) Turnstile."""

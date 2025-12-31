@@ -28,7 +28,8 @@ class ParkourDriver:
         headless: bool = True,
         fingerprint: Optional[BrowserFingerprint] = None,
         stealth: bool = True,
-        pool_size: int = 0
+        pool_size: int = 0,
+        browser_type: str = "chromium"
     ):
         """
         Initialize the driver.
@@ -38,11 +39,13 @@ class ParkourDriver:
             fingerprint: Browser fingerprint to use (or None for default)
             stealth: Enable stealth evasion scripts
             pool_size: Context pool size (0 = no pooling)
+            browser_type: Browser type ('chromium', 'firefox', 'webkit')
         """
         self.headless = headless
         self.fingerprint = fingerprint
         self.stealth = stealth
         self.pool_size = pool_size
+        self.browser_type = browser_type
         
         self.playwright = None
         self.browser: Optional[Browser] = None
@@ -63,10 +66,21 @@ class ParkourDriver:
                 "--no-sandbox",
             ])
         
-        self.browser = await self.playwright.chromium.launch(
-            headless=self.headless,
-            args=launch_args if launch_args else None
-        )
+        if self.browser_type == "firefox":
+            self.browser = await self.playwright.firefox.launch(
+                headless=self.headless,
+                args=launch_args if launch_args else None
+            )
+        elif self.browser_type == "webkit":
+            self.browser = await self.playwright.webkit.launch(
+                headless=self.headless,
+                args=launch_args if launch_args else None
+            )
+        else:
+            self.browser = await self.playwright.chromium.launch(
+                headless=self.headless,
+                args=launch_args if launch_args else None
+            )
         
         # Create context with fingerprint
         context_options = {}

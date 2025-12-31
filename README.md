@@ -67,7 +67,8 @@ import asyncio
 from py_parkour import ParkourBot
 
 async def main():
-    bot = ParkourBot(headless=False)
+    # Supports 'chromium' (default), 'firefox', or 'webkit'
+    bot = ParkourBot(headless=False, browser="firefox")
     await bot.start()
     await bot.goto("https://target-website.com")
     # ... use gadgets here ...

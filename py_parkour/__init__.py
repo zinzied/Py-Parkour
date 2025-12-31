@@ -94,7 +94,8 @@ class ParkourBot:
         gadgets: List[str] = None,
         fingerprint: Dict[str, Any] = None,
         pool_size: int = 0,
-        stealth: bool = True
+        stealth: bool = True,
+        browser: str = "chromium"
     ):
         """
         Initialize ParkourBot with optional configuration.
@@ -109,6 +110,7 @@ class ParkourBot:
                          or use FingerprintGallery.get('chrome_120_win11')
             pool_size: Number of browser contexts to pool (0 = no pooling)
             stealth: Enable stealth evasion scripts (recommended)
+            browser: Browser engine to use ('chromium', 'firefox', 'webkit')
         """
         # Parse fingerprint
         browser_fingerprint = None
@@ -127,7 +129,8 @@ class ParkourBot:
             headless=headless,
             fingerprint=browser_fingerprint,
             stealth=stealth,
-            pool_size=pool_size
+            pool_size=pool_size,
+            browser_type=browser
         )
         
         # Configuration
@@ -135,6 +138,7 @@ class ParkourBot:
         self._fingerprint = browser_fingerprint
         self._stealth = stealth
         self._pool_size = pool_size
+        self._browser = browser
         
         # Disguises is always available (no browser required)
         self.identity = Disguises()

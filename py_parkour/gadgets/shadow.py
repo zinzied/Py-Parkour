@@ -149,21 +149,66 @@ class Shadow:
         local_storage = await self.get_local_storage()
         session_storage = await self.get_session_storage()
         
+        # Get Client Hints (Chrome/Edge)
+        try:
+            client_hints = await self.page.evaluate("""
+                () => {
+                    if (navigator.userAgentData) {
+                        return navigator.userAgentData.getHighEntropyValues([
+                            "architecture", "bitness", "model", "platformVersion", "fullVersionList"
+                        ]);
+                    }
+                    return null;
+                }
+            """)
+        except Exception:
+            client_hints = None
+        
         # Build recommended headers
         headers = {
             "User-Agent": user_agent,
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
             "Accept-Language": "en-US,en;q=0.9",
             "Accept-Encoding": "gzip, deflate, br",
-            "Sec-Ch-Ua": '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
-            "Sec-Ch-Ua-Mobile": "?0",
-            "Sec-Ch-Ua-Platform": '"Windows"',
+            "Upgrade-Insecure-Requests": "1",
             "Sec-Fetch-Dest": "document",
             "Sec-Fetch-Mode": "navigate",
             "Sec-Fetch-Site": "none",
             "Sec-Fetch-User": "?1",
-            "Upgrade-Insecure-Requests": "1",
         }
+        
+        # Add Client Hints headers if available
+        if client_hints:
+            try:
+                if "brands" in client_hints:
+                    brands = ", ".join([f'"{b["brand"]}";v="{b["version"]}"' for b in client_hints["brands"]])
+                    headers["Sec-Ch-Ua"] = brands
+                
+                headers["Sec-Ch-Ua-Mobile"] = "?1" if client_hints.get("mobile") else "?0"
+                
+                if "platform" in client_hints:
+                    headers["Sec-Ch-Ua-Platform"] = f'"{client_hints["platform"]}"'
+                
+                if "platformVersion" in client_hints:
+                    headers["Sec-Ch-Ua-Platform-Version"] = f'"{client_hints["platformVersion"]}"'
+                
+                if "architecture" in client_hints:
+                    headers["Sec-Ch-Ua-Arch"] = f'"{client_hints["architecture"]}"'
+                    
+                if "bitness" in client_hints:
+                    headers["Sec-Ch-Ua-Bitness"] = f'"{client_hints["bitness"]}"'
+                    
+                if "model" in client_hints:
+                    headers["Sec-Ch-Ua-Model"] = f'"{client_hints["model"]}"'
+            except Exception as e:
+                print(f"Shadow: Error parsing client hints: {e}")
+                # Fallback to hardcoded commonly used values if parsing fails
+                headers["Sec-Ch-Ua"] = '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"'
+                headers["Sec-Ch-Ua-Mobile"] = "?0"
+                headers["Sec-Ch-Ua-Platform"] = '"Windows"'
+        else:
+             # Fallback for non-client-hints browsers
+             pass
         
         return {
             "cookies": cookies,
@@ -244,12 +289,17 @@ class Shadow:
         
         # Add cookies
         for cookie in session_data["cookies_detailed"]:
-            scraper.cookies.set(
-                cookie["name"],
-                cookie["value"],
-                domain=cookie.get("domain", ""),
-                path=cookie.get("path", "/"),
-            )
+            try:
+                scraper.cookies.set(
+                    cookie["name"],
+                    cookie["value"],
+                    domain=cookie.get("domain", ""),
+                    path=cookie.get("path", "/"),
+                    secure=cookie.get("secure", False)
+                )
+            except Exception as e:
+                # Silently ignore invalid cookies or print warning
+                print(f"Shadow: Warning - Failed to set cookie {cookie.get('name')}: {e}")
     
     async def save_session(self, filepath: str) -> None:
         """
